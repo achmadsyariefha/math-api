@@ -57,7 +57,7 @@ describe('An HTTP Server', () => {
       // Arrange
       const a = 2;
       const b = 8;
-      const spySubstract = jest.spyOn(MathBasic, 'multiply');
+      const spyMultiply = jest.spyOn(MathBasic, 'multiply');
       const server = createServer({mathBasic: MathBasic});
 
       // Action
@@ -70,7 +70,31 @@ describe('An HTTP Server', () => {
       const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(200);
       expect(responseJson.value).toEqual(16);
-      expect(spySubstract).toBeCalledWith(a, b);
+      expect(spyMultiply).toBeCalledWith(a, b);
+    });
+  });
+
+  describe('when GET /divide', () => {
+    it(`should respond with a status code of 200
+        and the payload value is multiply result of a and b correctly`,
+    async () => {
+      // Arrange
+      const a = 8;
+      const b = 2;
+      const spyDivide = jest.spyOn(MathBasic, 'divide');
+      const server = createServer({mathBasic: MathBasic});
+
+      // Action
+      const response = await server.inject({
+        method: 'GET',
+        url: `/divide/${a}/${b}`,
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(200);
+      expect(responseJson.value).toEqual(4);
+      expect(spyDivide).toBeCalledWith(a, b);
     });
   });
 });
